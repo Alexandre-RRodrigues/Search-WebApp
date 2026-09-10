@@ -18,38 +18,25 @@ export default function SearchPage({ initialSearch }: SearchPageProps) {
   const router = useRouter();
   const [query, setQuery] = useState(initialSearch);
   const [history, setHistory] = useState<string[]>(getInitialHistory);
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState(Boolean(initialSearch));
   const [results, setResults] = useState("");
-  const [resultFor, setResultFor] = useState("");
   const [isPending, startTransition] = useTransition();
   const requestId = useRef(0);
   const compact = Boolean(initialSearch) || isSearching || isPending;
 
   useEffect(() => {
     const currentRequestId = ++requestId.current;
-    setQuery(initialSearch);
 
     if (!initialSearch) {
-      setResults("");
-      setResultFor("");
-      setIsSearching(false);
-      return;
-    }
-
-    if (resultFor === initialSearch && results) {
       return;
     }
 
     let cancelled = false;
-    setResults("");
-    setResultFor("");
-    setIsSearching(true);
     void mockSearch(initialSearch).then(() => {
       if (!cancelled && currentRequestId === requestId.current) {
         setResults(
           messages.resultFor(initialSearch),
         );
-        setResultFor(initialSearch);
         setIsSearching(false);
       }
     });
@@ -57,7 +44,7 @@ export default function SearchPage({ initialSearch }: SearchPageProps) {
     return () => {
       cancelled = true;
     };
-  }, [initialSearch, resultFor, results]);
+  }, [initialSearch]);
 
   function returnToBaseRoute() {
     startTransition(() => router.replace("/"));

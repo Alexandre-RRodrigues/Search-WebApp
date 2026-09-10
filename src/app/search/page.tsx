@@ -1,13 +1,10 @@
-import SearchPage from "@/components/search/SearchPage";
+import { Suspense } from "react";
+import SearchRouteContent from "./SearchRouteContent";
 
-type SearchRouteProps = {
-  searchParams: Promise<{ q?: string }>;
-};
-
-export default async function SearchRoute({
-  searchParams,
-}: SearchRouteProps) {
-  const { q = "" } = await searchParams;
-
-  return <SearchPage initialSearch={q} />;
+export default function SearchRoute() {
+  return (
+    <Suspense>
+      <SearchRouteContent />
+    </Suspense>
+  );
 }
