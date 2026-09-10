@@ -7,6 +7,7 @@ import AuthActions from "./AuthActions";
 import RecentSearches from "./RecentSearches";
 import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
+import { appConfig } from "@/lib/app-config";
 import { messages } from "@/lib/i18n";
 import { getInitialHistory, mockSearch, saveHistory } from "@/lib/search-utils";
 
@@ -139,7 +140,7 @@ export default function SearchPage({ initialSearch }: SearchPageProps) {
         />
       </section>
       <footer className="mt-16 text-center text-xs text-zinc-600">
-        Built with Next.js and TypeScript
+        Built with Next.js and TypeScript · v{appConfig.version}
       </footer>
     </main>
   );
