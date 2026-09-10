@@ -1,6 +1,9 @@
 export const historyStorageKey = "test-page-search-history";
 
 const searchRequests = new Map<string, Promise<void>>();
+const historyListeners = new Set<() => void>();
+const emptyHistory: string[] = [];
+let historySnapshot: string[] | undefined;
 
 export function mockSearch(query: string) {
   const existingRequest = searchRequests.get(query);
@@ -17,7 +20,7 @@ export function mockSearch(query: string) {
 
 export function getInitialHistory(): string[] {
   if (typeof window === "undefined") {
-    return [];
+    return emptyHistory;
   }
 
   try {
@@ -43,7 +46,27 @@ export function getInitialHistory(): string[] {
   }
 }
 
+export function getHistorySnapshot() {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  historySnapshot ??= getInitialHistory();
+  return historySnapshot;
+}
+
+export function getServerHistory() {
+  return emptyHistory;
+}
+
+export function subscribeToHistory(listener: () => void) {
+  historyListeners.add(listener);
+  return () => historyListeners.delete(listener);
+}
+
 export function saveHistory(history: string[]) {
+  historySnapshot = history;
+
   try {
     window.localStorage.setItem(historyStorageKey, JSON.stringify(history));
   } catch (error) {
@@ -56,4 +79,6 @@ export function saveHistory(history: string[]) {
       throw error;
     }
   }
+
+  historyListeners.forEach((listener) => listener());
 }

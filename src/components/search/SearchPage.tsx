@@ -2,14 +2,26 @@
 
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
-import { useEffect, useRef, useState, useTransition } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  useTransition,
+} from "react";
 import AuthActions from "./AuthActions";
 import RecentSearches from "./RecentSearches";
 import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
 import { appConfig } from "@/lib/app-config";
 import { messages } from "@/lib/i18n";
-import { getInitialHistory, mockSearch, saveHistory } from "@/lib/search-utils";
+import {
+  getHistorySnapshot,
+  getServerHistory,
+  mockSearch,
+  saveHistory,
+  subscribeToHistory,
+} from "@/lib/search-utils";
 
 type SearchPageProps = {
   initialSearch: string;
@@ -18,7 +30,11 @@ type SearchPageProps = {
 export default function SearchPage({ initialSearch }: SearchPageProps) {
   const router = useRouter();
   const [query, setQuery] = useState(initialSearch);
-  const [history, setHistory] = useState<string[]>(getInitialHistory);
+  const history = useSyncExternalStore(
+    subscribeToHistory,
+    getHistorySnapshot,
+    getServerHistory,
+  );
   const [isSearching, setIsSearching] = useState(Boolean(initialSearch));
   const [results, setResults] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -68,7 +84,6 @@ export default function SearchPage({ initialSearch }: SearchPageProps) {
       trimmedQuery,
       ...history.filter((item) => item !== trimmedQuery),
     ];
-    setHistory(nextHistory);
     saveHistory(nextHistory);
     startTransition(() => {
       router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
