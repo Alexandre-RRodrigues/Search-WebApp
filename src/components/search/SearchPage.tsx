@@ -81,11 +81,11 @@ export default function SearchPage({ initialSearch }: SearchPageProps) {
   }
 
   return (
-    <main className="relative min-h-screen bg-zinc-950 px-6 py-10 text-zinc-100 transition-all duration-700 ease-out sm:px-10">
+    <main className="relative flex min-h-screen flex-col bg-zinc-950 px-6 py-10 text-zinc-100 transition-all duration-700 ease-out sm:px-10">
       <AuthActions />
       <section
-        className={`mx-auto w-full transition-all duration-700 ease-out ${
-          compact ? "max-w-5xl" : "max-w-2xl pt-[18vh]"
+        className={`mx-auto w-full flex-1 transition-all duration-700 ease-out ${
+          compact ? "max-w-5xl pt-20" : "max-w-2xl pt-[18vh]"
         }`}
       >
         <header
@@ -138,6 +138,9 @@ export default function SearchPage({ initialSearch }: SearchPageProps) {
           onSelect={handleHistoryItem}
         />
       </section>
+      <footer className="mt-16 text-center text-xs text-zinc-600">
+        Built with Next.js and TypeScript
+      </footer>
     </main>
   );
 }
