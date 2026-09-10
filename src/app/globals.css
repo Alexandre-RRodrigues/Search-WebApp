@@ -12,3 +12,26 @@ body {
   min-height: 100vh;
   background: #09090b;
 }
+
+html {
+  scrollbar-color: var(--color-primary) #18181b;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #18181b;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #18181b;
+  border-radius: 999px;
+  background: var(--color-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-primary) 85%, white);
+}
