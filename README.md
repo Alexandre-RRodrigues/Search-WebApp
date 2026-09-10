@@ -27,12 +27,25 @@ The shared accent color is defined in [`src/app/globals.css`](./src/app/globals.
 
 Change that variable to update the button, focus states, history links, and results accent.
 
-## GitHub Pages
+## Firebase Hosting
 
 Pushes to `main` run the CI/CD workflow in
 [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml). It installs
-dependencies, runs lint and tests, builds the static export, and deploys it to
-GitHub Pages.
+dependencies, runs lint and tests, builds the static export, and deploys the
+`out/` directory to Firebase Hosting.
 
-In the repository settings, set **Pages → Build and deployment → Source** to
-**GitHub Actions**.
+This uses Firebase Hosting on the free Spark plan. Firebase App Hosting is not
+required.
+
+Add this repository secret before deploying:
+
+- `FIREBASE_SERVICE_ACCOUNT`: the JSON credentials for a Google service account
+  with Firebase Hosting deployment permissions
+
+For local deployment, authenticate with the Firebase CLI and run:
+
+```bash
+npx firebase-tools login
+npm run build
+npx firebase-tools deploy --only hosting
+```
